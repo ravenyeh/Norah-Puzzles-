@@ -1,3 +1,4 @@
 {
-  "framework": "nuxt"
+  "buildCommand": "npm run generate",
+  "outputDirectory": ".output/public"
 }
