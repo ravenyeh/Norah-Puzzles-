@@ -161,7 +161,7 @@
 <script setup lang="ts">
 interface Props {
   imageUrl: string
-  pieceCount: 6 | 9 | 20
+  pieceCount: 6 | 9 | 16
 }
 
 interface PuzzlePiece {
@@ -199,7 +199,7 @@ const setPieceRef = (el: any, id: number) => {
 const gridDimensions = computed(() => {
   if (props.pieceCount === 6) return { cols: 3, rows: 2 }
   if (props.pieceCount === 9) return { cols: 3, rows: 3 }
-  return { cols: 5, rows: 4 } // 20 pieces
+  return { cols: 4, rows: 4 } // 16 pieces
 })
 
 const cols = computed(() => gridDimensions.value.cols)
