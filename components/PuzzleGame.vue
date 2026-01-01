@@ -105,17 +105,17 @@
         <div
           v-for="piece in pieces"
           :key="piece.id"
-          class="puzzle-piece absolute rounded-lg overflow-hidden border-2"
+          :ref="el => setPieceRef(el, piece.id)"
+          class="puzzle-piece absolute rounded-lg overflow-hidden border-2 will-change-transform"
           :class="{
             'border-green-400 correct shadow-green-200': piece.isPlaced,
-            'border-candy-purple shadow-2xl z-50 scale-105': draggingPiece === piece.id,
+            'dragging border-candy-purple shadow-2xl': draggingPiece === piece.id,
             'border-white shadow-lg hover:border-candy-pink': !piece.isPlaced && draggingPiece !== piece.id
           }"
           :style="{
             width: pieceWidth + 'px',
             height: pieceHeight + 'px',
-            left: piece.currentX + 'px',
-            top: piece.currentY + 'px',
+            transform: `translate3d(${piece.currentX}px, ${piece.currentY}px, 0)`,
             backgroundImage: `url(${imageUrl})`,
             backgroundSize: `${containerSize.width}px ${containerSize.height}px`,
             backgroundPosition: `-${piece.correctX}px -${piece.correctY}px`,
@@ -161,7 +161,7 @@
 <script setup lang="ts">
 interface Props {
   imageUrl: string
-  pieceCount: 6 | 10 | 20
+  pieceCount: 6 | 9 | 20
 }
 
 interface PuzzlePiece {
@@ -180,6 +180,7 @@ const emit = defineEmits<{
 
 const containerRef = ref<HTMLElement | null>(null)
 const pieces = ref<PuzzlePiece[]>([])
+const pieceRefs = ref<Map<number, HTMLElement>>(new Map())
 const draggingPiece = ref<number | null>(null)
 const dragOffset = ref({ x: 0, y: 0 })
 const isComplete = ref(false)
@@ -190,10 +191,14 @@ const containerSize = ref({ width: 400, height: 320 })
 
 const confettiColors = ['#FF6B9D', '#C44EC4', '#4ECDC4', '#FFE66D', '#FF8B4E']
 
+const setPieceRef = (el: any, id: number) => {
+  if (el) pieceRefs.value.set(id, el)
+}
+
 // Calculate grid dimensions
 const gridDimensions = computed(() => {
   if (props.pieceCount === 6) return { cols: 3, rows: 2 }
-  if (props.pieceCount === 10) return { cols: 5, rows: 2 }
+  if (props.pieceCount === 9) return { cols: 3, rows: 3 }
   return { cols: 5, rows: 4 } // 20 pieces
 })
 
@@ -279,6 +284,23 @@ const handleTouchStart = (e: TouchEvent, pieceId: number) => {
   }
 }
 
+const updatePiecePosition = (newX: number, newY: number) => {
+  if (draggingPiece.value === null) return
+
+  // 直接操作 DOM 以獲得更流暢的效果
+  const el = pieceRefs.value.get(draggingPiece.value)
+  if (el) {
+    el.style.transform = `translate3d(${newX}px, ${newY}px, 0) scale(1.05)`
+  }
+
+  // 同時更新資料（用於放開時的判斷）
+  const pieceIndex = pieces.value.findIndex(p => p.id === draggingPiece.value)
+  if (pieceIndex !== -1) {
+    pieces.value[pieceIndex].currentX = newX
+    pieces.value[pieceIndex].currentY = newY
+  }
+}
+
 const handleMouseMove = (e: MouseEvent) => {
   if (draggingPiece.value === null) return
 
@@ -288,11 +310,7 @@ const handleMouseMove = (e: MouseEvent) => {
   const newX = e.clientX - rect.left - dragOffset.value.x
   const newY = e.clientY - rect.top - dragOffset.value.y
 
-  const pieceIndex = pieces.value.findIndex(p => p.id === draggingPiece.value)
-  if (pieceIndex !== -1) {
-    pieces.value[pieceIndex].currentX = newX
-    pieces.value[pieceIndex].currentY = newY
-  }
+  updatePiecePosition(newX, newY)
 }
 
 const handleTouchMove = (e: TouchEvent) => {
@@ -305,11 +323,7 @@ const handleTouchMove = (e: TouchEvent) => {
   const newX = touch.clientX - rect.left - dragOffset.value.x
   const newY = touch.clientY - rect.top - dragOffset.value.y
 
-  const pieceIndex = pieces.value.findIndex(p => p.id === draggingPiece.value)
-  if (pieceIndex !== -1) {
-    pieces.value[pieceIndex].currentX = newX
-    pieces.value[pieceIndex].currentY = newY
-  }
+  updatePiecePosition(newX, newY)
 }
 
 const handleMouseUp = () => {
@@ -386,6 +400,21 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+.puzzle-piece {
+  left: 0;
+  top: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.puzzle-piece.dragging {
+  z-index: 100 !important;
+}
+
+.will-change-transform {
+  will-change: transform;
+}
+
 .confetti {
   position: absolute;
   width: 10px;
