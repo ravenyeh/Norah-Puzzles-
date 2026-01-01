@@ -161,7 +161,7 @@
 <script setup lang="ts">
 interface Props {
   imageUrl: string
-  pieceCount: 20 | 30 | 40
+  pieceCount: 6 | 10 | 20
 }
 
 interface PuzzlePiece {
@@ -192,9 +192,9 @@ const confettiColors = ['#FF6B9D', '#C44EC4', '#4ECDC4', '#FFE66D', '#FF8B4E']
 
 // Calculate grid dimensions
 const gridDimensions = computed(() => {
-  if (props.pieceCount === 20) return { cols: 5, rows: 4 }
-  if (props.pieceCount === 30) return { cols: 6, rows: 5 }
-  return { cols: 8, rows: 5 }
+  if (props.pieceCount === 6) return { cols: 3, rows: 2 }
+  if (props.pieceCount === 10) return { cols: 5, rows: 2 }
+  return { cols: 5, rows: 4 } // 20 pieces
 })
 
 const cols = computed(() => gridDimensions.value.cols)

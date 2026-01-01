@@ -21,9 +21,9 @@
 <script setup lang="ts">
 const gameState = ref<'upload' | 'playing'>('upload')
 const imageUrl = ref('')
-const pieceCount = ref<20 | 30 | 40>(20)
+const pieceCount = ref<6 | 10 | 20>(6)
 
-const handleImageSelect = (data: { url: string; pieces: 20 | 30 | 40 }) => {
+const handleImageSelect = (data: { url: string; pieces: 6 | 10 | 20 }) => {
   imageUrl.value = data.url
   pieceCount.value = data.pieces
   gameState.value = 'playing'

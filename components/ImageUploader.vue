@@ -92,7 +92,7 @@
         </li>
         <li class="flex items-center gap-2">
           <span class="text-candy-pink">💡</span>
-          選擇拼圖片數（20、30 或 40 片）
+          選擇拼圖片數（6、10 或 20 片）
         </li>
         <li class="flex items-center gap-2">
           <span class="text-candy-pink">💡</span>
@@ -109,18 +109,18 @@
 
 <script setup lang="ts">
 const emit = defineEmits<{
-  (e: 'image-select', data: { url: string; pieces: 20 | 30 | 40 }): void
+  (e: 'image-select', data: { url: string; pieces: 6 | 10 | 20 }): void
 }>()
 
 const fileInput = ref<HTMLInputElement | null>(null)
 const isDragging = ref(false)
 const previewUrl = ref('')
-const selectedPieces = ref<20 | 30 | 40>(20)
+const selectedPieces = ref<6 | 10 | 20>(6)
 
 const pieceOptions = [
-  { count: 20 as const, label: '簡單', emoji: '🌟' },
-  { count: 30 as const, label: '中等', emoji: '⭐' },
-  { count: 40 as const, label: '困難', emoji: '🔥' },
+  { count: 6 as const, label: '簡單', emoji: '🌟' },
+  { count: 10 as const, label: '中等', emoji: '⭐' },
+  { count: 20 as const, label: '困難', emoji: '🔥' },
 ]
 
 const handleDrop = (e: DragEvent) => {
