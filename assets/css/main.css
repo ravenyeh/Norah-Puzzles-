@@ -60,21 +60,6 @@ body {
   100% { transform: scale(1); }
 }
 
-/* Decorative elements */
-.star {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  background: linear-gradient(135deg, #FFE66D, #FF8B4E);
-  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-  animation: twinkle 2s ease-in-out infinite;
-}
-
-@keyframes twinkle {
-  0%, 100% { opacity: 1; transform: scale(1) rotate(0deg); }
-  50% { opacity: 0.7; transform: scale(0.9) rotate(10deg); }
-}
-
 /* Upload area */
 .upload-area {
   @apply border-4 border-dashed border-candy-pink rounded-3xl p-12 text-center;
