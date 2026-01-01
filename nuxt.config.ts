@@ -2,6 +2,9 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@nuxtjs/tailwindcss'],
+  nitro: {
+    preset: 'vercel'
+  },
   app: {
     head: {
       title: '🧩 可愛拼圖遊戲 | Cute Puzzle Game',
